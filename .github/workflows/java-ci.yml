@@ -50,19 +50,22 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Create bin directory
+        run: mkdir bin
+
       - name: Compile Calculator
-        run: javac src/Calculator.java
+        run: javac -d bin src/Calculator.java
 
       - name: Download JUnit
         run: |
-          curl -L -o junit-platform-console-standalone.jar \
+          curl -L -o junit.jar \
           https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.10.1/junit-platform-console-standalone-1.10.1.jar
 
       - name: Compile Tests
-        run: javac -cp .:junit-platform-console-standalone.jar src/CalculatorTest.java
+        run: javac -cp bin:junit.jar -d bin src/CalculatorTest.java
 
       - name: Run Chained Tests
         run: |
-          java -jar junit-platform-console-standalone.jar \
-          --class-path src \
+          java -jar junit.jar \
+          --class-path bin \
           --scan-class-path
